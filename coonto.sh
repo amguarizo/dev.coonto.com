@@ -140,7 +140,7 @@ configure_caddy(){
     fi
   fi
 
-  install -m 644 "$candidate" "$CADDYFILE"
+  cat "$candidate" > "$CADDYFILE"
   rm -f "$candidate"
   if [[ "${CADDY_IS_DOCKER:-0}" == "1" ]]; then
     if ! docker exec "$CADDY_SERVICE" caddy reload --config /etc/caddy/Caddyfile; then
