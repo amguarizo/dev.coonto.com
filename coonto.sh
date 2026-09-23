@@ -125,8 +125,14 @@ configure_caddy(){
   } >> "$candidate"
 
   if [[ "${CADDY_IS_DOCKER:-0}" == "1" ]]; then
-    local internal_candidate="/etc/caddy/$(basename "$candidate")"
-    docker exec "$CADDY_SERVICE" caddy validate --config "$internal_candidate" --adapter caddyfile >/dev/null || { rm -f "$candidate"; fail "A nova configuração é inválida no Docker."; }
+    local internal_candidate="/tmp/$(basename "$candidate")"
+    docker cp "$candidate" "${CADDY_SERVICE}:${internal_candidate}"
+    if ! docker exec "$CADDY_SERVICE" caddy validate --config "$internal_candidate" --adapter caddyfile >/dev/null; then
+      docker exec "$CADDY_SERVICE" rm -f "$internal_candidate" 2>/dev/null || true
+      rm -f "$candidate"
+      fail "A nova configuração é inválida no Docker."
+    fi
+    docker exec "$CADDY_SERVICE" rm -f "$internal_candidate" 2>/dev/null || true
   else
     if ! caddy validate --config "$candidate" --adapter caddyfile >/dev/null; then
       rm -f "$candidate"
