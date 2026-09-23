@@ -12,7 +12,7 @@ warn(){ printf '\n[Coonto][ATENÇÃO] %s\n' "$*" >&2; }
 fail(){ printf '\n[Coonto][ERRO] %s\n' "$*" >&2; printf 'Execute: sudo ./coonto.sh report\n' >&2; exit 1; }
 need(){ command -v "$1" >/dev/null 2>&1 || fail "Comando obrigatório ausente: $1"; }
 as_root(){ if [[ ${EUID:-$(id -u)} -ne 0 ]]; then exec sudo -E bash "$0" "${ORIGINAL_ARGS[@]}"; fi; }
-load_env(){ [[ -f .env ]] || fail "Arquivo .env ausente. Execute sudo ./coonto.sh configure"; set -a; source .env; set +a; }
+load_env(){ [[ -f .env ]] || fail "Arquivo .env ausente. Execute sudo ./coonto.sh configure"; sed -i 's/\r$//' .env; set -a; source .env; set +a; }
 
 install_prerequisites(){
   as_root "$@"
@@ -125,9 +125,10 @@ configure_caddy(){
   } >> "$candidate"
 
   if [[ "${CADDY_IS_DOCKER:-0}" == "1" ]]; then
-    docker exec "$CADDY_SERVICE" caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile || { rm -f "$candidate"; fail "Configuração inválida no Docker."; }
+    local internal_candidate="/etc/caddy/$(basename "$candidate")"
+    docker exec "$CADDY_SERVICE" caddy validate --config "$internal_candidate" --adapter caddyfile >/dev/null || { rm -f "$candidate"; fail "A nova configuração é inválida no Docker."; }
   else
-    if ! caddy validate --config "$candidate" --adapter caddyfile; then
+    if ! caddy validate --config "$candidate" --adapter caddyfile >/dev/null; then
       rm -f "$candidate"
       fail "A nova configuração do Caddy não foi aplicada. O Caddyfile original permanece intacto."
     fi
@@ -159,14 +160,20 @@ configure_backup_cron(){
 
 wait_health(){
   load_env
-  for _ in $(seq 1 36); do curl -fsS --max-time 5 "http://127.0.0.1:${APP_PORT}/api/health" >/dev/null 2>&1 && return 0; sleep 5; done
+  for _ in $(seq 1 36); do
+    if curl -fsS --max-time 5 "http://127.0.0.1:${APP_PORT}/api/health" >/dev/null 2>&1; then return 0; fi
+    sleep 5
+  done
   docker compose logs --tail=80 app >&2 || true
   fail "A aplicação não ficou saudável no tempo esperado."
 }
 
 wait_public(){
   load_env
-  for _ in $(seq 1 18); do curl -fsS --max-time 8 "https://${DOMAIN}/api/health" >/dev/null 2>&1 && return 0; sleep 5; done
+  for _ in $(seq 1 18); do
+    if curl -fsS --max-time 8 "https://${DOMAIN}/api/health" >/dev/null 2>&1; then return 0; fi
+    sleep 5
+  done
   fail "A aplicação está ativa localmente, mas o endereço HTTPS ainda não respondeu. O Caddy continua ativo; gere o relatório."
 }
 
