@@ -1,0 +1,13 @@
+node_modules
+.next
+.git
+.env
+backups
+support
+*.tar.gz
+npm-debug.log*
+components/ui
+hooks
+components.json
+raw.d.ts
+lib/utils.ts

@@ -26,7 +26,7 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H "$SERVER_HOST" >> ~/.ssh/known_hosts
 
-      - name: Deploy files via Rsync
+      - name: Package and Deploy
         if: env.SSH_PRIVATE_KEY != ''
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -34,16 +34,11 @@ jobs:
           SERVER_HOST: ${{ secrets.SERVER_HOST }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH || '/opt/coonto/prod' }}
         run: |
-          ssh -o StrictHostKeyChecking=no ${SERVER_USER}@${SERVER_HOST} "mkdir -p ${DEPLOY_PATH}"
-          rsync -avz --delete \
-            -e "ssh -o StrictHostKeyChecking=no" \
-            --exclude '.git*' \
-            --exclude '.github*' \
-            --exclude 'docs*' \
-            --exclude '*.md' \
-            --exclude '*.bat' \
-            --exclude '*.sh' \
-            ./ ${SERVER_USER}@${SERVER_HOST}:${DEPLOY_PATH}/
+          mkdir -p /tmp/coonto-deployment-kit
+          rsync -a --exclude='.git' --exclude='.github' ./ /tmp/coonto-deployment-kit/
+          cd /tmp && tar -czf Coonto_Deployment_Kit_v1.1.0_Caddy.tar.gz coonto-deployment-kit
+          scp -o StrictHostKeyChecking=no /tmp/Coonto_Deployment_Kit_v1.1.0_Caddy.tar.gz ${SERVER_USER}@${SERVER_HOST}:/tmp/Coonto_Deployment_Kit_v1.1.0_Caddy.tar.gz
+          ssh -o StrictHostKeyChecking=no ${SERVER_USER}@${SERVER_HOST} "sudo mkdir -p ${DEPLOY_PATH} && sudo tar -xzf /tmp/Coonto_Deployment_Kit_v1.1.0_Caddy.tar.gz -C ${DEPLOY_PATH} --strip-components=1 && rm /tmp/Coonto_Deployment_Kit_v1.1.0_Caddy.tar.gz && cd ${DEPLOY_PATH} && sudo ./coonto.sh install"
 
       - name: Notify configuration needed
         if: env.SSH_PRIVATE_KEY == ''

@@ -1,0 +1,8 @@
+import { Building2, GraduationCap, Megaphone } from "lucide-react";
+import { PartnerForm } from "@/components/partner-form";
+import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
+
+export default function Parceiros() {
+  return <main className="page"><SiteHeader /><div className="content"><section className="partners-intro"><span className="section-kicker">NÃO QUEREMOS APENAS DIVULGAÇÃO</span><h1>Queremos parceiros que nos ajudem a compreender quem aprende.</h1><p>Professores, dirigentes e influenciadores entram antes do produto estar pronto para o mundo. Experimentam, criticam, indicam pessoas e ajudam o Coonto a nascer útil.</p></section><section className="partner-types"><article className="partner-type"><GraduationCap/><h2>Professores e educadores</h2><p>Validam fidelidade literária, valor pedagógico e uso real em sala de aula.</p></article><article className="partner-type"><Building2/><h2>Coordenação e direção</h2><p>Ajudam a desenhar adoção escolar, acompanhamento e condições para uma prova de conceito.</p></article><article className="partner-type"><Megaphone/><h2>Influenciadores e criadores</h2><p>Levam a experiência até quem precisa dela e devolvem sinais reais de interesse e compreensão.</p></article></section><section className="partners-form-wrap"><div><span className="section-kicker">VAMOS CONSTRUIR JUNTOS</span><h2>Conte de onde você fala e quem você pode aproximar.</h2><p>O Alienista é a primeira experiência gratuita. Parceiros poderão receber materiais, acompanhar testes e participar das próximas escolhas.</p></div><PartnerForm /></section></div><SiteFooter /></main>;
+}

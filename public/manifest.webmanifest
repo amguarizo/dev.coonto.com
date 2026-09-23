@@ -1,0 +1,10 @@
+{
+  "name": "Coonto",
+  "short_name": "Coonto",
+  "description": "Entre na obra. Saia compreendendo.",
+  "start_url": "/minha-biblioteca",
+  "display": "standalone",
+  "background_color": "#09162f",
+  "theme_color": "#09162f",
+  "icons": [{ "src": "/favicon.png", "sizes": "420x420", "type": "image/png" }]
+}

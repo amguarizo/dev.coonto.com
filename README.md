@@ -1,95 +1,163 @@
-# Coonto Alpha
+# Coonto Deployment Kit
 
-Plataforma interativa de aprendizagem e literatura. O vertical slice atual do Alpha é focado na obra **O Alienista**, de Machado de Assis.
+Pacote autocontido para instalar a plataforma Coonto em um VPS Linux com Docker e PostgreSQL, preservando o Caddy que já gerencia o acesso e o HTTPS do servidor.
 
-- **Ambiente de Produção (Principal)**: [https://coonto.com](https://coonto.com)
-- **Ambiente de Desenvolvimento (Dev/Testes)**: [https://dev.coonto.com](https://dev.coonto.com)
-- **Ambiente Main (Em Construção)**: [https://main.coonto.com](https://main.coonto.com)
-- **Domínios com Redirecionamento**: `coonto.co` e `coonto.com.br` redirecionam permanentemente para `https://coonto.com`.
-- **Repositório Oficial**: [https://github.com/amguarizo/coonto](https://github.com/amguarizo/coonto)
+## Instalação resumida
 
----
+O responsável técnico deve copiar e extrair o pacote em um caminho sem espaços, preferencialmente:
 
-## 📌 Estrutura de Branches & Fluxo de Trabalho
+```bash
+/opt/coonto
+```
 
-O projeto adota o seguinte modelo de branching:
+Depois, dentro da pasta extraída, executar:
+
+```bash
+sudo ./coonto.sh install
+```
+
+O instalador:
+
+1. verifica o servidor;
+2. instala dependências ausentes em Ubuntu ou Debian;
+3. cria segredos locais;
+4. inicia o PostgreSQL;
+5. aplica as migrações;
+6. constrói a aplicação;
+7. verifica a saúde do sistema;
+8. salva uma cópia do `Caddyfile` existente;
+9. valida e acrescenta somente o bloco de `dev.coonto.com`;
+10. recarrega o Caddy sem interromper os outros sites;
+11. testa o acesso HTTPS e ativa o backup diário.
+
+Nenhuma senha deve ser enviada pelo chat ou adicionada ao Git.
+
+## Primeiro acesso
+
+Enquanto o SMTP não estiver configurado, o kit usa o modo de validação. Durante a instalação, será exibido um código temporário de seis números.
+
+Esse código permite testar a criação de contas por e-mail sem depender do envio de mensagens. Quando o SMTP estiver disponível, altere no `.env`:
 
 ```text
-feature/* ──► develop ──► dev.coonto.com ──► homologação ──► main ──► deploy automático ──► coonto.com
+AUTH_MODE=email
 ```
 
-- **`main`**: Versão estável e publicada. O conteúdo desta branch reflete exatamente o que está rodando em produção (`https://coonto.com`).
-- **`develop`**: Versão em evolução contínua. Publicada automaticamente em (`https://dev.coonto.com`).
-- **`feature/*`**: Branches de curta duração para desenvolvimento isolado (ex: `feature/audio`, `feature/mapa`, `feature/engine`).
+Preencha as variáveis `SMTP_*` e execute novamente:
 
----
-
-## 🚀 Execução Local
-
-O projeto atual roda diretamente no navegador, podendo ser servido por qualquer servidor HTTP estático:
-
-### Usando o script batch (Windows):
-Dê um duplo clique no arquivo `INICIAR_COONTO.bat` ou execute no terminal:
-```cmd
-INICIAR_COONTO.bat
-```
-
-### Usando Python:
 ```bash
-python -m http.server 8080
+sudo ./coonto.sh update
 ```
-Acesse em: `http://localhost:8080`
 
-### Usando Node.js / npx:
+## Comandos operacionais
+
 ```bash
-npx serve .
+sudo ./coonto.sh status
+sudo ./coonto.sh diagnose
+sudo ./coonto.sh backup
+sudo ./coonto.sh rollback
+sudo ./coonto.sh report
+sudo ./coonto.sh caddy
 ```
 
----
+Para restaurar um backup:
 
-## 🏗️ Estrutura do Repositório
+```bash
+sudo ./coonto.sh restore /caminho/do/backup.sql.gz
+```
+
+A restauração pede confirmação explícita e cria um backup de segurança antes de substituir os dados.
+
+## Se ocorrer erro
+
+Executar:
+
+```bash
+sudo ./coonto.sh report
+```
+
+O comando informará o caminho de um arquivo semelhante a:
 
 ```text
-coonto/
-├── .github/
-│   └── workflows/
-│       └── deploy.yml          # Pipeline de deploy automático (CI/CD)
-├── assets/
-│   └── images/                 # Imagens históricas e narrativas
-├── docs/                       # Documentação técnica e de produto
-│   ├── product/                # Visão e objetivos
-│   ├── architecture/           # Learning Engine, deploy e infra
-│   ├── narrative/              # Roteiro e ramificações de O Alienista
-│   └── ux/                     # Diretrizes visuais e mapa de decisões
-├── index.html                  # Interface do Alpha v0.3
-├── styles.css                  # Estilos do Alpha
-├── app.js                      # Mecânica narrativa e lógica do vertical slice
-├── nginx-alpha.coonto.com.br.conf # Modelo de configuração Nginx para Ubuntu
-└── README.md                   # Este arquivo
+support/coonto-support-report-20260922T220000Z.txt
 ```
 
----
+Enviar somente esse relatório para análise. O relatório não inclui os valores do `.env` e tenta remover padrões sensíveis que possam aparecer nos logs.
 
-## 🚢 Deploy para `coonto.com`
+Não enviar:
 
-### 1. Deploy Automático (GitHub Actions)
-O repositório conta com o workflow [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) acionado a cada `push` na branch `main`.
+- `.env`;
+- chave SSH;
+- senha do PostgreSQL;
+- senha SMTP;
+- código temporário de acesso;
+- chaves do Stripe.
 
-Para ativá-lo, cadastre as seguintes variáveis em **Settings > Secrets and variables > Actions** no repositório:
-- `SERVER_HOST`: IP público do servidor Ubuntu.
-- `SERVER_USER`: Usuário de acesso SSH (ex: `ubuntu`).
-- `SSH_PRIVATE_KEY`: Chave privada SSH autorizada no servidor.
-- `DEPLOY_PATH`: Diretório raiz do site no servidor (ex: `/var/www/alpha.coonto.com.br`).
+## Estrutura do pacote
 
-### 2. Deploy Manual no Servidor Ubuntu
-Consulte o guia completo em [`docs/architecture/deploy.md`](docs/architecture/deploy.md) e [`Coonto_Deploy_Ubuntu_Instrucoes.md`](Coonto_Deploy_Ubuntu_Instrucoes.md).
+```text
+coonto-deployment-kit/
+├── app/                  aplicação web e APIs
+├── components/           interface da plataforma
+├── content/              obra protegida, fora da pasta pública
+├── db/migrations/        estrutura PostgreSQL
+├── deploy/caddy/         bloco isolado para dev.coonto.com
+├── public/               identidade visual e PWA
+├── scripts/              backup, restauração e relatório
+├── coonto.sh             comando único de operação
+├── compose.yaml          serviços Docker
+├── Dockerfile            imagem da aplicação
+├── .env.example          modelo sem segredos
+└── VERSION               versão do kit
+```
 
----
+## Requisitos e comportamento seguro
 
-## 📚 Documentação Adicional
+- O kit deve ser executado em VPS Linux.
+- O caminho da instalação não pode conter espaços.
+- PostgreSQL fica acessível apenas dentro da rede Docker.
+- A aplicação escuta apenas em `127.0.0.1:3100` por padrão.
+- Somente o Caddy existente recebe tráfego público.
+- O instalador não instala Nginx nem executa Certbot.
+- O `Caddyfile` completo é copiado antes de qualquer mudança.
+- O bloco do Coonto é delimitado por marcadores e pode ser atualizado sem reescrever os demais sites.
+- A configuração completa é validada antes do reload do Caddy.
+- Se o reload falhar ou o serviço ficar inativo, o `Caddyfile` anterior é restaurado.
+- O instalador interrompe se detectar configuração essencial inválida.
+- Atualizações geram backup quando o banco já está ativo.
+- A imagem anterior da aplicação é mantida para rollback.
+- O domínio principal `coonto.com` não é modificado.
 
-- [Visão do Produto](docs/product/visao.md)
-- [Arquitetura do Learning Engine](docs/architecture/learning-engine.md)
-- [Guia de Deploy e Infraestrutura](docs/architecture/deploy.md)
-- [Roteiro Narrativo: O Alienista](docs/narrative/o-alienista.md)
-- [Diretrizes de UX e Design (v0.3)](docs/ux/alpha-v0.3.md)
+## Estado funcional desta versão
+
+Incluído:
+
+- landing page e catálogo;
+- conta própria por e-mail e código;
+- modo de validação sem SMTP;
+- biblioteca pessoal;
+- progresso sincronizado;
+- limite configurável de aparelhos;
+- licença offline renovável;
+- experiência completa de *O Alienista*;
+- feedback e cadastro de parceiros;
+- backoffice restrito aos e-mails administradores;
+- PWA instalável;
+- PostgreSQL, backup e relatório de diagnóstico.
+
+Preparado, mas ainda não ativado:
+
+- cobranças Stripe;
+- produtos e preços definitivos;
+- Customer Portal;
+- cupons e indicações;
+- relatórios pedagógicos institucionais.
+
+## Observação sobre Caddy, DNS e HTTPS
+
+Antes de instalar, `dev.coonto.com` deve apontar para o IP público do VPS e as portas 80 e 443 devem continuar sob controle do Caddy. O Coonto é publicado apenas em `127.0.0.1:3100`; o Caddy faz o proxy e administra o certificado. Caso seja necessário reaplicar somente o bloco do Coonto, execute:
+
+```bash
+sudo ./coonto.sh caddy
+```
+
+O domínio principal `coonto.com`, o AltDesk e os demais blocos existentes não são reescritos pelo instalador.
