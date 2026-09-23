@@ -55,20 +55,20 @@ preflight(){
     export CADDY_IS_DOCKER=0
   fi
   [[ "$ROOT_DIR" != *" "* ]] || fail "Instale o kit em um caminho sem espaços."
-  [[ "$DOMAIN" =~ ^[A-Za-z0-9.-]+$ ]] || fail "DOMAIN inválido em .env."
-  [[ "$APP_PORT" =~ ^[0-9]+$ ]] || fail "APP_PORT inválida em .env."
-  [[ "$CADDYFILE" == /* ]] || fail "CADDYFILE deve ser um caminho absoluto."
-  [[ "$CADDY_SERVICE" =~ ^[A-Za-z0-9@_.-]+$ ]] || fail "CADDY_SERVICE inválido."
-  [[ "$CADDY_BACKUP_ROOT" == /* ]] || fail "CADDY_BACKUP_ROOT deve ser um caminho absoluto."
-  [[ -f "$CADDYFILE" ]] || fail "Caddyfile não encontrado em ${CADDYFILE}."
+  [[ "${DOMAIN:-}" =~ ^[A-Za-z0-9.-]+$ ]] || fail "DOMAIN inválido ou ausente em .env."
+  [[ "${APP_PORT:-}" =~ ^[0-9]+$ ]] || fail "APP_PORT inválida ou ausente em .env."
+  [[ "${CADDYFILE:-}" == /* ]] || fail "CADDYFILE deve ser um caminho absoluto em .env."
+  [[ "${CADDY_SERVICE:-}" =~ ^[A-Za-z0-9@_.-]+$ ]] || fail "CADDY_SERVICE inválido ou ausente."
+  [[ "${CADDY_BACKUP_ROOT:-}" == /* ]] || fail "CADDY_BACKUP_ROOT deve ser um caminho absoluto."
+  [[ -f "${CADDYFILE:-}" ]] || fail "Caddyfile não encontrado em ${CADDYFILE:-}."
   if [[ "${CADDY_IS_DOCKER:-0}" == "1" ]]; then
     docker exec "$CADDY_SERVICE" caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile >/dev/null || fail "Caddyfile inválido no Docker."
   else
     caddy validate --config "$CADDYFILE" --adapter caddyfile >/dev/null || fail "A configuração atual do Caddy já está inválida."
   fi
-  [[ "$POSTGRES_PASSWORD" != "CHANGE_ME" && ${#POSTGRES_PASSWORD} -ge 24 ]] || fail "POSTGRES_PASSWORD não configurada."
-  [[ "$AUTH_SECRET" != "CHANGE_ME" && ${#AUTH_SECRET} -ge 32 ]] || fail "AUTH_SECRET não configurado."
-  if [[ "$AUTH_MODE" == "validation" ]]; then [[ "$VALIDATION_ACCESS_CODE" =~ ^[0-9]{6}$ ]] || fail "VALIDATION_ACCESS_CODE deve ter seis números."; fi
+  [[ "${POSTGRES_PASSWORD:-}" != "CHANGE_ME" && ${#POSTGRES_PASSWORD} -ge 24 ]] || fail "POSTGRES_PASSWORD não configurada no .env."
+  [[ "${AUTH_SECRET:-}" != "CHANGE_ME" && ${#AUTH_SECRET} -ge 32 ]] || fail "AUTH_SECRET não configurado no .env."
+  if [[ "${AUTH_MODE:-}" == "validation" ]]; then [[ "${VALIDATION_ACCESS_CODE:-}" =~ ^[0-9]{6}$ ]] || fail "VALIDATION_ACCESS_CODE deve ter seis números."; fi
   if [[ "$AUTH_MODE" == "email" ]]; then [[ -n "$SMTP_HOST" && -n "$SMTP_USER" && -n "$SMTP_PASSWORD" && -n "$SMTP_FROM" ]] || fail "AUTH_MODE=email exige a configuração completa do SMTP."; fi
   if ss -ltn 2>/dev/null | awk '{print $4}' | grep -Eq "[:.]${APP_PORT}$" && ! docker compose ps --format json 2>/dev/null | grep -q 'coonto'; then fail "A porta local ${APP_PORT} já está em uso por outro serviço."; fi
   local free_kb; free_kb="$(df -Pk "$ROOT_DIR" | awk 'NR==2{print $4}')"; (( free_kb > 3145728 )) || fail "Menos de 3 GB livres no disco."
