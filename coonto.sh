@@ -48,7 +48,7 @@ preflight(){
   need curl; need openssl; need gzip
   docker info >/dev/null 2>&1 || fail "O serviço Docker não está ativo."
   load_env
-  if docker ps --format '{{.Names}}' | grep -q "^${CADDY_SERVICE}$"; then
+  if docker ps --format '{{.Names}}' | grep "^${CADDY_SERVICE}$" >/dev/null; then
     export CADDY_IS_DOCKER=1
   else
     systemctl is-active --quiet "$CADDY_SERVICE" || fail "O Caddy não está ativo (nem no Docker, nem no systemd)."
@@ -70,7 +70,7 @@ preflight(){
   [[ "${AUTH_SECRET:-}" != "CHANGE_ME" && ${#AUTH_SECRET} -ge 32 ]] || fail "AUTH_SECRET não configurado no .env."
   if [[ "${AUTH_MODE:-}" == "validation" ]]; then [[ "${VALIDATION_ACCESS_CODE:-}" =~ ^[0-9]{6}$ ]] || fail "VALIDATION_ACCESS_CODE deve ter seis números."; fi
   if [[ "$AUTH_MODE" == "email" ]]; then [[ -n "$SMTP_HOST" && -n "$SMTP_USER" && -n "$SMTP_PASSWORD" && -n "$SMTP_FROM" ]] || fail "AUTH_MODE=email exige a configuração completa do SMTP."; fi
-  if ss -ltn 2>/dev/null | awk '{print $4}' | grep -Eq "[:.]${APP_PORT}$" && ! docker compose ps --format json 2>/dev/null | grep -q 'coonto'; then fail "A porta local ${APP_PORT} já está em uso por outro serviço."; fi
+  if ss -ltn 2>/dev/null | awk '{print $4}' | grep -E "[:.]${APP_PORT}$" >/dev/null && ! docker compose ps --format json 2>/dev/null | grep 'coonto' >/dev/null; then fail "A porta local ${APP_PORT} já está em uso por outro serviço."; fi
   local free_kb; free_kb="$(df -Pk "$ROOT_DIR" | awk 'NR==2{print $4}')"; (( free_kb > 3145728 )) || fail "Menos de 3 GB livres no disco."
   log "Verificação concluída: Docker e Caddy estão compatíveis."
 }
@@ -87,7 +87,7 @@ configure_caddy(){
   backup_dir="${CADDY_BACKUP_ROOT}/${stamp}-$$"
 
   if [[ "${CADDY_IS_DOCKER:-0}" == "1" ]]; then
-    docker ps --format '{{.Names}}' | grep -q "^${CADDY_SERVICE}$" || fail "O Caddy Docker deixou de estar ativo."
+    docker ps --format '{{.Names}}' | grep "^${CADDY_SERVICE}$" >/dev/null || fail "O Caddy Docker deixou de estar ativo."
   else
     systemctl is-active --quiet "$CADDY_SERVICE" || fail "O Caddy deixou de estar ativo."
   fi
@@ -104,7 +104,7 @@ configure_caddy(){
     fail "Os marcadores do Coonto no Caddyfile estão incompletos. O arquivo original foi preservado."
   fi
 
-  if grep -Fq "$DOMAIN" "$candidate"; then
+  if grep -F "$DOMAIN" "$candidate" >/dev/null; then
     rm -f "$candidate"
     fail "O domínio ${DOMAIN} já aparece fora do bloco gerenciado do Coonto. O Caddyfile não foi modificado."
   fi
@@ -182,7 +182,7 @@ backup(){ load_env; bash scripts/backup.sh; }
 deploy(){
   as_root "$@"; install_prerequisites; [[ -f .env ]] || configure; preflight; load_env
   if docker image inspect coonto-app:current >/dev/null 2>&1; then docker tag coonto-app:current coonto-app:previous; fi
-  if docker compose ps --status running 2>/dev/null | grep -q db; then log "Gerando backup antes da atualização"; backup; fi
+  if docker compose ps --status running 2>/dev/null | grep 'db' >/dev/null; then log "Gerando backup antes da atualização"; backup; fi
   log "Iniciando PostgreSQL"
   docker compose up -d db
   log "Aplicando migrações"
