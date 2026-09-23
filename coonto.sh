@@ -17,7 +17,6 @@ load_env(){ [[ -f .env ]] || fail "Arquivo .env ausente. Execute sudo ./coonto.s
 install_prerequisites(){
   as_root "$@"
   if command -v docker >/dev/null && docker compose version >/dev/null 2>&1 && command -v curl >/dev/null && command -v openssl >/dev/null && command -v gzip >/dev/null; then
-    command -v caddy >/dev/null || fail "O Caddy existente não foi encontrado. O instalador não substitui o proxy do servidor."
     return
   fi
   command -v apt-get >/dev/null || fail "Dependências ausentes e o servidor não usa apt. Instale Docker, Docker Compose, curl, OpenSSL e gzip."
@@ -25,7 +24,6 @@ install_prerequisites(){
   apt-get update
   DEBIAN_FRONTEND=noninteractive apt-get install -y docker.io docker-compose-v2 curl openssl gzip ca-certificates dnsutils
   systemctl enable --now docker
-  command -v caddy >/dev/null || fail "O Caddy existente não foi encontrado. O instalador não instalará outro proxy automaticamente."
 }
 
 configure(){
