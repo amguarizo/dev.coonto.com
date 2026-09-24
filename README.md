@@ -1,3 +1,7 @@
+# Versão 1.2.0: catálogo inicial e Coonto Club
+
+Veja VERSAO_1.2.0_LEONARDO.md para mudanças, migração e atualização segura.
+
 # Coonto Deployment Kit
 
 Pacote autocontido para instalar a plataforma Coonto em um VPS Linux com Docker e PostgreSQL, preservando o Caddy que já gerencia o acesso e o HTTPS do servidor.
