@@ -3,10 +3,13 @@ import { query } from "@/lib/db";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { TeacherWorkspace } from "@/components/teacher-workspace";
+import { ensureAlienistaEntitlement } from "@/lib/member";
+import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 export default async function Professor() {
   const user = await requireUser("/professor");
+  if (!await ensureAlienistaEntitlement(user.userId)) redirect("/checkout/o-alienista?return_to=%2Fprofessor");
   // A área docente é autodeclarada; futuramente escolas podem verificar seus docentes.
   await query("INSERT INTO teacher_profiles (user_id) VALUES ($1) ON CONFLICT DO NOTHING", [user.userId]);
   return <main className="page"><SiteHeader/><div className="content member-page">

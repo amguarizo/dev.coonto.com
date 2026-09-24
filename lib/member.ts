@@ -11,7 +11,6 @@ export async function getMember() {
 }
 
 export async function ensureAlienistaEntitlement(userId: string) {
-  await query(`INSERT INTO entitlements (id, user_id, work_slug, source) VALUES ($1, $2, $3, 'free-validation') ON CONFLICT (user_id, work_slug) DO NOTHING`, [crypto.randomUUID(), userId, ALIENISTA_SLUG]);
   const result = await query<{ id: string }>("SELECT id FROM entitlements WHERE user_id = $1 AND work_slug = $2 AND status = 'active' LIMIT 1", [userId, ALIENISTA_SLUG]);
   return result.rows[0] ?? null;
 }

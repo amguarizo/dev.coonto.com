@@ -36,7 +36,7 @@ export default function Home() {
         </nav>
       </header>
       <section className="split-hero" aria-labelledby="main-question">
-        <h1 id="main-question" className="sr-only">Como você quer entrar no Coonto?</h1>
+        <h1 id="main-question" className="home-message">Viva a obra para compreendê-la.<small>Entre na história, decida e volte ao texto com novas perguntas.</small></h1>
         {audienceCards.map((item) => {
           const Icon = item.icon;
           return (
@@ -55,7 +55,7 @@ export default function Home() {
         <div className="hero-center-mark" aria-hidden="true">ou</div>
       </section>
       <section className="proof-strip">
-        <a href="/obra/o-alienista" className="proof-link"><strong>Primeiro, viva a pergunta.</strong><span>Veja como a experiência funciona →</span></a>
+        <a href="/obra/o-alienista" className="proof-link"><strong>Viva a obra para compreendê-la.</strong><span>Veja como a experiência funciona →</span></a>
         <a href="/obra/o-alienista" className="proof-link"><strong>O Alienista</strong><span>Conheça a primeira experiência →</span></a>
         <a href="/obra/o-alienista#oferta" className="proof-link"><strong>O Alienista sempre grátis</strong><span>Conheça a obra gratuita →</span></a>
       </section>
