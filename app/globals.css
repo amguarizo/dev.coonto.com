@@ -178,3 +178,9 @@ button,input,textarea,select { font:inherit; }
 .book-card.upcoming .tag { color:#48577a; }.book-card.upcoming h2 { color:#172347; }
 @media (max-width:900px) { .educator-paths,.guide-list { grid-template-columns:1fr; }.teacher-layout { grid-template-columns:1fr; }.catalog-grid { display:flex; overflow-x:auto; scroll-snap-type:x mandatory; gap:15px; padding-bottom:28px; }.catalog-grid .book-card { flex:0 0 min(82vw,400px); scroll-snap-align:start; min-height:440px; } }
 @media (max-width:520px) { .teacher-panel { padding:18px; }.teacher-reader { padding:9px; }.teacher-reader .experience-frame { min-height:540px; }.original-text { font-size:1rem; } }
+.teacher-exercise { padding:18px; border:1px solid #cedafb; border-radius:18px; background:#f1f5ff; }
+.teacher-exercise h2 { margin:0 0 8px; }.teacher-exercise p { margin:8px 0 15px; }
+.teacher-exercise ol { margin:0; padding-left:23px; display:grid; gap:12px; }
+.teacher-exercise li { padding-left:3px; line-height:1.4; }
+.teacher-exercise li button { border:0; padding:0; background:transparent; color:var(--blue); font:inherit; font-weight:700; cursor:pointer; text-align:left; text-decoration:underline; }
+.teacher-exercise li span { display:block; color:var(--ink); margin-top:3px; font-size:.88rem; }

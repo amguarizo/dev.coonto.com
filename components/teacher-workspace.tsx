@@ -6,6 +6,14 @@ import { ALIENISTA_SCENES } from "@/lib/works";
 
 type Bookmark = { id:string; scene_id:string; title:string };
 
+const guidedExercise = [
+  { verb:"Observar", scene:"s19", prompt:"Quem contesta Bacamarte? Separe o fato narrado da impressão da turma." },
+  { verb:"Interpretar", scene:"s20", prompt:"Que mudança de escala a revolta revela? Peça duas leituras possíveis." },
+  { verb:"Provar", scene:"s21", prompt:"Que detalhe sustenta ou complica a relação entre ciência e poder?" },
+  { verb:"Conectar", scene:"s24", prompt:"Compare a pauta da revolta com o discurso após a vitória." },
+  { verb:"Lembrar", scene:"s26", prompt:"Depois de um intervalo, explique a relação sem rever a cena." },
+];
+
 export function TeacherWorkspace() {
   const iframe = useRef<HTMLIFrameElement>(null);
   const [selected,setSelected] = useState("s0");
@@ -42,6 +50,12 @@ export function TeacherWorkspace() {
   }
   return <div className="teacher-layout">
     <aside className="teacher-panel">
+      <section className="teacher-exercise" aria-labelledby="teacher-exercise-heading">
+        <h2 id="teacher-exercise-heading">Exercício guiado · Revolta dos Canjicas</h2>
+        <p>Roteiro do guia pedagógico: faça as escolhas na prévia e peça que a turma justifique cada resposta com a obra. Você pode retomar cada etapa sem recomeçar.</p>
+        <ol>{guidedExercise.map(step=><li key={step.verb}><button type="button" onClick={()=>jump(step.scene)}><strong>{step.verb}</strong> · abrir cena</button><span>{step.prompt}</span></li>)}</ol>
+        <p><a href="/texto/o-alienista#capitulo-vi" target="_blank" rel="noopener noreferrer">Abrir o capítulo VI de Machado ↗</a> · <a href="/guias/Coonto_Para_Educadores_03_Uso_em_Aula.pdf" target="_blank" rel="noopener noreferrer">Guia 03 completo (PDF) ↗</a></p>
+      </section>
       <h2>Pontos sugeridos</h2><p>Escolha uma cena para discutir. As cenas posteriores podem revelar acontecimentos da obra.</p>
       <div className="teacher-scene-list">{ALIENISTA_SCENES.map(scene=><button type="button" key={scene.id} onClick={()=>jump(scene.id)}>
         <strong>{scene.label}</strong><small>Cap. {scene.chapter} · {scene.phase}{scene.spoiler?" · contém revelações":""}</small>
@@ -55,7 +69,7 @@ export function TeacherWorkspace() {
       {status&&<p role="status">{status}</p>}
       <p><a href="/minha-biblioteca">Ir para minha leitura pessoal</a></p>
     </aside>
-    <div className="teacher-reader"><p><strong>Prévia para aula.</strong> Suas escolhas aqui não mudam o progresso da leitura pessoal.</p>
+    <div className="teacher-reader"><p><strong>Prévia para aula.</strong> Responda às perguntas da experiência, avance entre elas ou salte pelo roteiro. Suas escolhas aqui não mudam o progresso da leitura pessoal.</p>
       <iframe ref={iframe} onLoad={()=>{setReady(true);iframe.current?.contentWindow?.postMessage({type:"coonto:teacher-jump",sceneId:selected},location.origin);}} title="O Alienista — prévia do professor" src="/api/works/o-alienista?mode=teacher" className="experience-frame" allow="autoplay"/>
     </div>
   </div>;

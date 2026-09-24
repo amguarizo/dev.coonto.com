@@ -15,7 +15,8 @@ export default function Educadores() {
     <section className="educator-guides"><span className="section-kicker">MATERIAL DE APOIO</span><h2>Guias para planejar a aula</h2><p>Leia, baixe e adapte as perguntas ao momento da turma.</p>
       <div className="guide-list"><a href="/guias/Coonto_Para_Educadores_01_Como_Funciona.pdf" target="_blank" rel="noopener">01 · Como funciona o Coonto (PDF)</a>
         <a href="/guias/Coonto_Para_Educadores_02_Quando_Usar.pdf" target="_blank" rel="noopener">02 · Quando usar: antes, durante ou depois (PDF)</a>
-        <a href="/para-educadores/roteiro-de-aula">03 · Roteiro de aula e ficha de observação</a></div>
+        <a href="/guias/Coonto_Para_Educadores_03_Uso_em_Aula.pdf" target="_blank" rel="noopener">03 · Como usar o Coonto em aula (PDF)</a></div>
+      <p>Veja também o <a href="/para-educadores/roteiro-de-aula">roteiro de aula em formato de página</a> e o <a href="/professor">exercício guiado na área do professor</a>.</p>
     </section>
   </div><SiteFooter/></main>;
 }
