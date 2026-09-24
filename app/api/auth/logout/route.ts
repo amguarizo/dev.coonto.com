@@ -10,10 +10,10 @@ export async function GET(request: Request) {
     try { await query("DELETE FROM sessions WHERE token_hash=$1", [hashToken(token)]); }
     catch (error) { console.error("logout_session_revoke_failed", error); }
   }
-  const url = new URL(request.url);
-  const target = url.searchParams.get("return_to") || "/";
-  const safe = target.startsWith("/") && !target.startsWith("//") && !target.startsWith("/\\") ? target : "/";
-  const response = NextResponse.redirect(new URL(safe, url.origin), 303);
+  const target = new URL(request.url).searchParams.get("return_to") || "/";
+  const safe = target.startsWith("/") && !target.startsWith("//") && !target.startsWith("/\\") && !/[\r\n]/.test(target) ? target : "/";
+  // Um Location relativo preserva o domínio público atrás do proxy.
+  const response = new NextResponse(null, { status:303, headers:{ Location:safe } });
   response.cookies.set(sessionCookie.name, "", { ...sessionCookie.options, maxAge: 0, expires: new Date(0) });
   response.headers.set("Cache-Control", "no-store, max-age=0");
   response.headers.set("Clear-Site-Data", '"cache"');
