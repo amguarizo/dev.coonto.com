@@ -8,6 +8,7 @@ export async function SiteHeader() {
       <nav aria-label="Navegação">
         <a href="/catalogo">Catálogo</a>
         <a href="/parceiros">Parceiros</a>
+        <a href="/para-educadores">Educadores</a>
         {user ? <><a className="member-nav" href="/minha-biblioteca">Minha biblioteca</a><a className="account-link" href={logoutPath("/")}>Sair</a></> : <a className="button button-coral" href={loginPath("/minha-biblioteca")}>Entrar</a>}
       </nav>
     </header>

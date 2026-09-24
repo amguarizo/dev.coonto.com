@@ -1,0 +1,17 @@
+import { requireUser } from "@/lib/auth";
+import { query } from "@/lib/db";
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
+import { TeacherWorkspace } from "@/components/teacher-workspace";
+
+export const dynamic = "force-dynamic";
+export default async function Professor() {
+  const user = await requireUser("/professor");
+  // A área docente é autodeclarada; futuramente escolas podem verificar seus docentes.
+  await query("INSERT INTO teacher_profiles (user_id) VALUES ($1) ON CONFLICT DO NOTHING", [user.userId]);
+  return <main className="page"><SiteHeader/><div className="content member-page">
+    <section className="page-hero"><span className="section-kicker">ESPAÇO DO PROFESSOR</span><h1>Prepare a aula sem perder o caminho.</h1>
+      <p>Abra uma cena para discussão e marque os pontos que usará depois. Este percurso de preparação não altera o progresso dos alunos.</p></section>
+    <TeacherWorkspace/>
+  </div><SiteFooter/></main>;
+}

@@ -1,0 +1,338 @@
+[
+  {
+    "id": "s0",
+    "title": "O Alienista",
+    "phase": "Abertura",
+    "chapter": "",
+    "type": "intro"
+  },
+  {
+    "id": "s1",
+    "title": "O experimento",
+    "phase": "Fase 1 · O experimento",
+    "chapter": "Capítulos I–III",
+    "type": "phase"
+  },
+  {
+    "id": "s2",
+    "title": "Quem é Simão Bacamarte?",
+    "phase": "Fase 1 · O experimento",
+    "chapter": "Capítulo I",
+    "type": "choice"
+  },
+  {
+    "id": "s3",
+    "title": "O casamento calculado",
+    "phase": "Fase 1 · O experimento",
+    "chapter": "Capítulo I",
+    "type": "choice"
+  },
+  {
+    "id": "s4",
+    "title": "Nasce a Casa Verde",
+    "phase": "Fase 1 · O experimento",
+    "chapter": "Capítulo I",
+    "type": "choice"
+  },
+  {
+    "id": "s5",
+    "title": "Caridade ou experimento?",
+    "phase": "Fase 1 · O experimento",
+    "chapter": "Capítulo II",
+    "type": "choice"
+  },
+  {
+    "id": "s6",
+    "title": "D. Evarista entra no campo de observação",
+    "phase": "Fase 1 · O experimento",
+    "chapter": "Capítulo III",
+    "type": "choice"
+  },
+  {
+    "id": "s7",
+    "title": "O que mudou até aqui?",
+    "phase": "Fase 1 · O experimento",
+    "chapter": "Checkpoint",
+    "type": "checkpoint"
+  },
+  {
+    "id": "s8",
+    "title": "Quem é louco?",
+    "phase": "Fase 2 · Quem é louco?",
+    "chapter": "Capítulos IV–V",
+    "type": "phase"
+  },
+  {
+    "id": "s9",
+    "title": "Da ilha ao continente",
+    "phase": "Fase 2 · Quem é louco?",
+    "chapter": "Capítulo IV",
+    "type": "choice"
+  },
+  {
+    "id": "s10",
+    "title": "Quem controla o limite?",
+    "phase": "Fase 2 · Quem é louco?",
+    "chapter": "Capítulo IV",
+    "type": "choice"
+  },
+  {
+    "id": "s11",
+    "title": "O caso de Costa",
+    "phase": "Fase 2 · Quem é louco?",
+    "chapter": "Capítulo V",
+    "type": "choice"
+  },
+  {
+    "id": "s12",
+    "title": "A prima que tenta ajudar",
+    "phase": "Fase 2 · Quem é louco?",
+    "chapter": "Capítulo V",
+    "type": "choice"
+  },
+  {
+    "id": "s13",
+    "title": "Mateus diante da própria casa",
+    "phase": "Fase 2 · Quem é louco?",
+    "chapter": "Capítulo V",
+    "type": "choice"
+  },
+  {
+    "id": "s14",
+    "title": "Ninguém sabe mais quem está são",
+    "phase": "Fase 2 · Quem é louco?",
+    "chapter": "Capítulo V",
+    "type": "choice"
+  },
+  {
+    "id": "s15",
+    "title": "Porfírio entra em cena",
+    "phase": "Fase 2 · Quem é louco?",
+    "chapter": "Capítulo V",
+    "type": "choice"
+  },
+  {
+    "id": "s16",
+    "title": "Da Casa Verde à vida da cidade",
+    "phase": "Fase 2 · Quem é louco?",
+    "chapter": "Checkpoint",
+    "type": "checkpoint"
+  },
+  {
+    "id": "s17",
+    "title": "A revolta",
+    "phase": "Fase 3 · A revolta",
+    "chapter": "Capítulos VI–VIII",
+    "type": "phase"
+  },
+  {
+    "id": "s18",
+    "title": "A Câmara recusa",
+    "phase": "Fase 3 · A revolta",
+    "chapter": "Capítulo VI",
+    "type": "choice"
+  },
+  {
+    "id": "s19",
+    "title": "A Revolta dos Canjicas",
+    "phase": "Fase 3 · A revolta",
+    "chapter": "Capítulo VI",
+    "type": "narrative"
+  },
+  {
+    "id": "s20",
+    "title": "A cidade chega à Casa Verde",
+    "phase": "Fase 3 · A revolta",
+    "chapter": "Capítulo VI",
+    "type": "choice"
+  },
+  {
+    "id": "s21",
+    "title": "Bacamarte vai à varanda",
+    "phase": "Fase 3 · A revolta",
+    "chapter": "Capítulo VI",
+    "type": "choice"
+  },
+  {
+    "id": "s22",
+    "title": "O objetivo da revolta muda",
+    "phase": "Fase 3 · A revolta",
+    "chapter": "Capítulo VI",
+    "type": "choice"
+  },
+  {
+    "id": "s23",
+    "title": "Os soldados mudam de lado",
+    "phase": "Fase 3 · A revolta",
+    "chapter": "Capítulo VII",
+    "type": "choice"
+  },
+  {
+    "id": "s24",
+    "title": "A Casa Verde some do discurso",
+    "phase": "Fase 3 · A revolta",
+    "chapter": "Capítulo VII",
+    "type": "choice"
+  },
+  {
+    "id": "s25",
+    "title": "Crispim escolhe o vencedor",
+    "phase": "Fase 3 · A revolta",
+    "chapter": "Capítulo VIII",
+    "type": "choice"
+  },
+  {
+    "id": "s26",
+    "title": "O que a revolta revelou?",
+    "phase": "Fase 3 · A revolta",
+    "chapter": "Checkpoint",
+    "type": "checkpoint"
+  },
+  {
+    "id": "s27",
+    "title": "Ciência, política e poder",
+    "phase": "Fase 4 · Ciência, política e poder",
+    "chapter": "Capítulos IX–X",
+    "type": "phase"
+  },
+  {
+    "id": "s28",
+    "title": "Porfírio procura Bacamarte",
+    "phase": "Fase 4 · Ciência, política e poder",
+    "chapter": "Capítulo IX",
+    "type": "choice"
+  },
+  {
+    "id": "s29",
+    "title": "Dois lindos casos",
+    "phase": "Fase 4 · Ciência, política e poder",
+    "chapter": "Capítulo IX",
+    "type": "choice"
+  },
+  {
+    "id": "s30",
+    "title": "Revolução da revolução",
+    "phase": "Fase 4 · Ciência, política e poder",
+    "chapter": "Capítulo X",
+    "type": "choice"
+  },
+  {
+    "id": "s31",
+    "title": "Agora todos cabem",
+    "phase": "Fase 4 · Ciência, política e poder",
+    "chapter": "Capítulo X",
+    "type": "choice"
+  },
+  {
+    "id": "s32",
+    "title": "D. Evarista é internada",
+    "phase": "Fase 4 · Ciência, política e poder",
+    "chapter": "Capítulo X",
+    "type": "choice"
+  },
+  {
+    "id": "s33",
+    "title": "Pessoas mudam. Sistemas permanecem.",
+    "phase": "Fase 4 · Ciência, política e poder",
+    "chapter": "Checkpoint",
+    "type": "checkpoint"
+  },
+  {
+    "id": "s34",
+    "title": "A inversão",
+    "phase": "Fase 5 · A inversão",
+    "chapter": "Capítulos XI–XIII",
+    "type": "phase"
+  },
+  {
+    "id": "s35",
+    "title": "Quatro quintos da população",
+    "phase": "Fase 5 · A inversão",
+    "chapter": "Capítulo XI",
+    "type": "choice"
+  },
+  {
+    "id": "s36",
+    "title": "A teoria vira do avesso",
+    "phase": "Fase 5 · A inversão",
+    "chapter": "Capítulo XI",
+    "type": "choice"
+  },
+  {
+    "id": "s37",
+    "title": "A frase que a população não leu",
+    "phase": "Fase 5 · A inversão",
+    "chapter": "Capítulo XI",
+    "type": "choice"
+  },
+  {
+    "id": "s38",
+    "title": "Os virtuosos entram",
+    "phase": "Fase 5 · A inversão",
+    "chapter": "Capítulo XII",
+    "type": "choice"
+  },
+  {
+    "id": "s39",
+    "title": "Preso por ter cão, preso por não ter",
+    "phase": "Fase 5 · A inversão",
+    "chapter": "Capítulo XII",
+    "type": "choice"
+  },
+  {
+    "id": "s40",
+    "title": "Curar a virtude",
+    "phase": "Fase 5 · A inversão",
+    "chapter": "Capítulo XIII",
+    "type": "choice"
+  },
+  {
+    "id": "s41",
+    "title": "O examinador é examinado",
+    "phase": "Fase 5 · A inversão",
+    "chapter": "Capítulo XIII",
+    "type": "choice"
+  },
+  {
+    "id": "s42",
+    "title": "A porta se fecha",
+    "phase": "Fase 5 · A inversão",
+    "chapter": "Capítulo XIII",
+    "type": "narrative"
+  },
+  {
+    "id": "c1",
+    "title": "O que realmente mudou em Itaguaí?",
+    "phase": "Desafio final",
+    "chapter": "Obra completa",
+    "type": "challenge"
+  },
+  {
+    "id": "c2",
+    "title": "A revolta resolveu o problema?",
+    "phase": "Desafio final",
+    "chapter": "Obra completa",
+    "type": "challenge"
+  },
+  {
+    "id": "c3",
+    "title": "Por que a inversão é tão importante?",
+    "phase": "Desafio final",
+    "chapter": "Obra completa",
+    "type": "challenge"
+  },
+  {
+    "id": "c4",
+    "title": "Quem julga o julgador?",
+    "phase": "Desafio final",
+    "chapter": "Obra completa",
+    "type": "challenge"
+  },
+  {
+    "id": "final",
+    "title": "Você não apenas terminou O Alienista. Você construiu uma leitura da obra.",
+    "phase": "Conclusão",
+    "chapter": "",
+    "type": "final"
+  }
+]

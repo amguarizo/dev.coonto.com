@@ -1,13 +1,21 @@
-import { BookOpenCheck, Building2, Megaphone } from "lucide-react";
-import { PathChoice } from "@/components/path-choice";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
+const paths = [
+  { id:"alunos", title:"Usar com meus alunos", description:"Comece pela experiência gratuita de O Alienista e use as cenas para levantar hipóteses e voltar às passagens de Machado. O Coonto Club será uma opção individual quando as três primeiras obras estiverem completas; não há assinatura ativa hoje.", action:"Abrir o espaço do professor", href:"/professor" },
+  { id:"escola", title:"Levar para minha escola", description:"Apresente o método à coordenação com os guias abaixo, experimente O Alienista com uma turma e combine quais evidências de compreensão observar. Um piloto institucional, a adaptação e seus valores devem ser discutidos com a escola; o Coonto ainda não afirma resultados medidos.", action:"Conversar sobre um piloto", href:"/parceiros" },
+  { id:"audiencia", title:"Apresentar para minha audiência", description:"Criadores, curadores e educadores podem experimentar a obra, avaliar o conteúdo e propor materiais ou divulgação em conjunto. Conte sua ideia para definirmos uma colaboração concreta, sem promessa antecipada de comissão.", action:"Propor parceria", href:"/parceiros" },
+];
+
 export default function Educadores() {
-  const choices = [
-    { icon:<BookOpenCheck />, title:"Usar com meus alunos", text:"Quero uma experiência que desperte perguntas, dê contexto e ajude a lembrar da obra." },
-    { icon:<Building2 />, title:"Levar para minha escola", text:"Quero avaliar o Coonto como solução pedagógica para turmas, professores e acompanhamento." },
-    { icon:<Megaphone />, title:"Apresentar para minha audiência", text:"Quero experimentar, produzir conteúdo e aproximar mais pessoas das grandes obras." },
-  ];
-  return <main className="page"><SiteHeader /><div className="content"><section className="page-hero"><span className="section-kicker">SEU CAMINHO COMEÇA AQUI</span><h1>Como você quer transformar compreensão em aprendizagem?</h1><p>Escolha a situação que mais se aproxima da sua. Não queremos empurrar uma ferramenta: queremos mostrar onde ela resolve um problema real.</p></section><PathChoice choices={choices} /></div><SiteFooter /></main>;
+  return <main className="page"><SiteHeader/><div className="content">
+    <section className="page-hero"><span className="section-kicker">COONTO PARA EDUCADORES</span><h1>Escolha como quer usar a experiência.</h1>
+      <p>O livro original continua sendo a referência. O Coonto organiza cenas, decisões e perguntas para apoiar sua mediação.</p></section>
+    <div className="educator-paths">{paths.map(path=><article id={path.id} key={path.id} className="educator-path"><h2>{path.title}</h2><p>{path.description}</p><a className="button button-primary" href={path.href}>{path.action}</a></article>)}</div>
+    <section className="educator-guides"><span className="section-kicker">MATERIAL DE APOIO</span><h2>Guias para planejar a aula</h2><p>Leia, baixe e adapte as perguntas ao momento da turma.</p>
+      <div className="guide-list"><a href="/guias/Coonto_Para_Educadores_01_Como_Funciona.pdf" target="_blank" rel="noopener">01 · Como funciona o Coonto (PDF)</a>
+        <a href="/guias/Coonto_Para_Educadores_02_Quando_Usar.pdf" target="_blank" rel="noopener">02 · Quando usar: antes, durante ou depois (PDF)</a>
+        <a href="/para-educadores/roteiro-de-aula">03 · Roteiro de aula e ficha de observação</a></div>
+    </section>
+  </div><SiteFooter/></main>;
 }

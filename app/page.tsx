@@ -57,7 +57,7 @@ export default function Home() {
       <section className="proof-strip">
         <a href="/obra/o-alienista" className="proof-link"><strong>Primeiro, viva a pergunta.</strong><span>Veja como a experiência funciona →</span></a>
         <a href="/obra/o-alienista" className="proof-link"><strong>O Alienista</strong><span>Conheça a primeira experiência →</span></a>
-        <a href="/obra/o-alienista#oferta" className="proof-link"><strong>Grátis por tempo limitado</strong><span>Abra agora a primeira obra →</span></a>
+        <a href="/obra/o-alienista#oferta" className="proof-link"><strong>O Alienista sempre grátis</strong><span>Conheça a obra gratuita →</span></a>
       </section>
       <section className="home-next" id="feedback">
         <div>
