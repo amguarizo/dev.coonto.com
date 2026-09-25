@@ -1,4 +1,5 @@
 import { requireUser } from "@/lib/auth";
+import { requireCrmHost } from "@/lib/admin-host";
 import { query } from "@/lib/db";
 import { surveyLabels } from "@/lib/survey";
 import { SiteHeader } from "@/components/site-header";
@@ -13,6 +14,7 @@ async function distribution(key: string) {
 }
 
 export default async function SurveyResults({ searchParams }: { searchParams: Promise<{ pagina?: string }> }) {
+  await requireCrmHost();
   const user = await requireUser("/backoffice/pesquisa");
   if (user.role !== "admin") return <main className="page"><SiteHeader/><div className="content page-hero"><h1>Área restrita</h1><p>Sua conta não possui acesso administrativo.</p></div></main>;
   const params = await searchParams;

@@ -1,4 +1,5 @@
 import { query } from "@/lib/db";
+import { recordCrmEvent } from "@/lib/crm-events";
 import { surveyChoices } from "@/lib/survey";
 
 const singleKeys = ["role", "understood", "difficulty", "helpful", "adoption", "payer", "obstacle", "followup"] as const;
@@ -34,7 +35,9 @@ export async function POST(request: Request) {
       answers[key] = value.trim();
     }
     if (!answers.problem || !answers.clarity_improvement || !answers.priority) return Response.json({ error: "Responda às perguntas abertas 5, 11 e 12" }, { status: 400 });
-    await query("INSERT INTO survey_responses (id,survey_version,answers) VALUES ($1,$2,$3::jsonb)", [crypto.randomUUID(), "1.6.0", JSON.stringify(answers)]);
+    const id = crypto.randomUUID();
+    await query("INSERT INTO survey_responses (id,survey_version,answers) VALUES ($1,$2,$3::jsonb)", [id, "1.6.0", JSON.stringify(answers)]);
+    await recordCrmEvent({ type: "survey_submitted", relatedType: "survey", relatedId: id, metadata: { role: String(answers.role) } });
     return Response.json({ ok: true }, { status: 201 });
   } catch (error) {
     if (error instanceof SyntaxError) return Response.json({ error: "Dados inválidos" }, { status: 400 });

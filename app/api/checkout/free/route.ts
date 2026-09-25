@@ -1,6 +1,7 @@
 import { getCurrentUser } from "@/lib/auth";
 import { query } from "@/lib/db";
 import { ALIENISTA_SLUG } from "@/lib/member";
+import { recordCrmEvent } from "@/lib/crm-events";
 
 export async function POST(request: Request) {
   const user = await getCurrentUser();
@@ -26,6 +27,7 @@ export async function POST(request: Request) {
         RETURNING id
       ) SELECT purchased.id FROM purchased CROSS JOIN granted
     `, [crypto.randomUUID(),user.userId,ALIENISTA_SLUG,crypto.randomUUID()]);
+    await recordCrmEvent({ type: "free_order_completed", userId: user.userId, relatedType: "work", relatedId: ALIENISTA_SLUG, channel: "free" });
     return Response.json({ ok:true, orderId:result.rows[0].id, totalCents:0 });
   } catch (error) {
     console.error("free_checkout_failed", error);
