@@ -38,8 +38,9 @@ export default function Home() {
         <img src="/images/coonto-logo.png" alt="Coonto" className="brand-logo" />
         <nav aria-label="Navegação principal">
           <a href="/catalogo">Catálogo</a>
-          <a href="/parceiros">Seja parceiro</a>
-          <a href="#feedback">Feedback</a>
+          <a className="survey-nav-link" href="/pesquisa">Pesquisa</a>
+          <a className="home-nav-secondary" href="/parceiros">Seja parceiro</a>
+          <a className="home-nav-secondary" href="#feedback">Feedback</a>
           <a href="/login?return_to=%2Fminha-biblioteca">Entrar</a>
         </nav>
       </header>
