@@ -5,7 +5,11 @@ import { ALIENISTA_SLUG } from "@/lib/member";
 export async function POST(request: Request) {
   const user = await getCurrentUser();
   if (!user) return Response.json({ error: "Entre na sua conta para concluir o pedido." }, { status: 401 });
-  if (request.headers.get("origin") && request.headers.get("origin") !== new URL(request.url).origin)
+  // Atrás do Caddy, request.url pode conter o endereço interno do contêiner.
+  // O navegador envia a origem pública configurada para a aplicação.
+  const publicOrigin = process.env.NODE_ENV === "production" && process.env.DOMAIN
+    ? `https://${process.env.DOMAIN}` : new URL(request.url).origin;
+  if (request.headers.get("origin") && request.headers.get("origin") !== publicOrigin)
     return Response.json({ error: "Origem inválida." }, { status: 403 });
   try {
     // O pedido e o acesso nascem na mesma instrução: não há cobrança nem provedor de pagamento.
