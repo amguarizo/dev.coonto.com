@@ -1,0 +1,11 @@
+.crm-page { display:grid; gap:20px; padding-bottom:80px; }
+.crm-page .backoffice-hero { padding-bottom:0; }
+.crm-jump,.crm-inline-form { display:flex; flex-wrap:wrap; align-items:end; gap:14px; }
+.crm-jump a { padding:10px 14px; border-radius:12px; background:white; border:1px solid var(--line); font-weight:700; }
+.crm-form-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+.crm-form-grid .form-card { padding:20px; box-shadow:none; }
+.crm-inline-form .field { min-width:170px; margin:0; }
+.crm-table-wrap { overflow-x:auto; }
+.crm-table { width:100%; border-collapse:collapse; text-align:left; }
+.crm-table th,.crm-table td { padding:12px; border-bottom:1px solid var(--line); }
+@media (max-width:850px) { .crm-form-grid { grid-template-columns:1fr; } .crm-page .status-item { align-items:start; flex-direction:column; } }
