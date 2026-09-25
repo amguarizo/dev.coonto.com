@@ -1,10 +1,17 @@
 import { getCurrentUser, loginPath, logoutPath } from "@/lib/auth";
+import { isCrmHost } from "@/lib/admin-host";
+import Link from "next/link";
 
 export async function SiteHeader() {
+  const crm = await isCrmHost();
   const user = await getCurrentUser();
+  if (crm) return <header className="site-header admin-site-header">
+    <Link href="/backoffice" aria-label="Início do CRM Coonto"><img src="/images/coonto-logo.png" alt="Coonto" className="brand-logo" /></Link>
+    <nav aria-label="Administração"><span>CRM · ADMINISTRAÇÃO</span>{user?.role === "admin" ? <><a href="/backoffice">Painel</a><a href="/backoffice/crm">Contas</a><a href="/backoffice/atividade">Atividade</a><a href="/backoffice/parcerias">Parcerias</a><a href="/backoffice/pesquisa">Pesquisa</a><a href={logoutPath("/login")}>Sair</a></> : user ? <a href={logoutPath("/login")}>Sair</a> : <a href="/login?return_to=%2Fbackoffice">Entrar</a>}</nav>
+  </header>;
   return (
     <header className="site-header">
-      <a href="/" aria-label="Voltar para o início"><img src="/images/coonto-logo.png" alt="Coonto" className="brand-logo" /></a>
+      <Link href="/" aria-label="Voltar para o início"><img src="/images/coonto-logo.png" alt="Coonto" className="brand-logo" /></Link>
       <nav aria-label="Navegação">
         <a href="/catalogo">Catálogo</a>
         <a className="survey-nav-link" href="/pesquisa">Pesquisa</a>

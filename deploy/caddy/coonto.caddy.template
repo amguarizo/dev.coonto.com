@@ -2,3 +2,14 @@ __DOMAIN__ {
 	encode zstd gzip
 	reverse_proxy __APP_HOST__:__APP_PORT__
 }
+
+__CRM_DOMAIN__ {
+	encode zstd gzip
+	@admin path /backoffice* /login /api/auth/* /_next/* /images/coonto-logo.png /favicon*
+	handle @admin {
+		reverse_proxy __APP_HOST__:__APP_PORT__
+	}
+	handle {
+		respond "Não encontrado" 404
+	}
+}

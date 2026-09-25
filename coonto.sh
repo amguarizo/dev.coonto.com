@@ -12,7 +12,7 @@ warn(){ printf '\n[Coonto][ATENÇÃO] %s\n' "$*" >&2; }
 fail(){ printf '\n[Coonto][ERRO] %s\n' "$*" >&2; printf 'Execute: sudo ./coonto.sh report\n' >&2; exit 1; }
 need(){ command -v "$1" >/dev/null 2>&1 || fail "Comando obrigatório ausente: $1"; }
 as_root(){ if [[ ${EUID:-$(id -u)} -ne 0 ]]; then exec sudo -E bash "$0" "${ORIGINAL_ARGS[@]}"; fi; }
-load_env(){ [[ -f .env ]] || fail "Arquivo .env ausente. Execute sudo ./coonto.sh configure"; sed -i 's/\r$//' .env; set -a; source .env; set +a; }
+load_env(){ [[ -f .env ]] || fail "Arquivo .env ausente. Execute sudo ./coonto.sh configure"; sed -i 's/\r$//' .env; set -a; source .env; set +a; export CRM_DOMAIN="${CRM_DOMAIN:-crm.${DOMAIN}}"; }
 
 install_prerequisites(){
   as_root "$@"
@@ -56,6 +56,7 @@ preflight(){
   fi
   [[ "$ROOT_DIR" != *" "* ]] || fail "Instale o kit em um caminho sem espaços."
   [[ "${DOMAIN:-}" =~ ^[A-Za-z0-9.-]+$ ]] || fail "DOMAIN inválido ou ausente em .env."
+  [[ "${CRM_DOMAIN:-}" =~ ^[A-Za-z0-9.-]+$ && "${CRM_DOMAIN}" != "${DOMAIN}" ]] || fail "CRM_DOMAIN inválido em .env."
   [[ "${APP_PORT:-}" =~ ^[0-9]+$ ]] || fail "APP_PORT inválida ou ausente em .env."
   [[ "${CADDYFILE:-}" == /* ]] || fail "CADDYFILE deve ser um caminho absoluto em .env."
   [[ "${CADDY_SERVICE:-}" =~ ^[A-Za-z0-9@_.-]+$ ]] || fail "CADDY_SERVICE inválido ou ausente."
@@ -104,7 +105,7 @@ configure_caddy(){
     fail "Os marcadores do Coonto no Caddyfile estão incompletos. O arquivo original foi preservado."
   fi
 
-  if grep -F "$DOMAIN" "$candidate" >/dev/null; then
+  if grep -F "$DOMAIN" "$candidate" >/dev/null || grep -F "$CRM_DOMAIN" "$candidate" >/dev/null; then
     rm -f "$candidate"
     fail "O domínio ${DOMAIN} já aparece fora do bloco gerenciado do Coonto. O Caddyfile não foi modificado."
   fi
@@ -120,7 +121,7 @@ configure_caddy(){
 
   {
     printf '\n%s\n' "$begin_marker"
-    sed -e "s/__DOMAIN__/${DOMAIN}/g" -e "s/__APP_HOST__/${app_host}/g" -e "s/__APP_PORT__/${app_port}/g" deploy/caddy/coonto.caddy.template
+    sed -e "s/__DOMAIN__/${DOMAIN}/g" -e "s/__CRM_DOMAIN__/${CRM_DOMAIN}/g" -e "s/__APP_HOST__/${app_host}/g" -e "s/__APP_PORT__/${app_port}/g" deploy/caddy/coonto.caddy.template
     printf '%s\n' "$end_marker"
   } >> "$candidate"
 

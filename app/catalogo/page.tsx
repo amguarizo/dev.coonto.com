@@ -4,6 +4,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SuggestionForm } from "@/components/suggestion-form";
 import { formatBRL, getCommercialSettings } from "@/lib/commercial";
 import { CatalogArt } from "@/components/catalog-art";
+import { FormJump } from "@/components/form-jump";
 
 const nextWorks = [
   "Memórias de Martha", "Vida e morte de M. J. Gonzaga de Sá", "Lésbia",
@@ -18,7 +19,7 @@ export default async function Catalogo() {
   const clubPrice = formatBRL(prices.club_price_cents);
   return (
     <main className="page">
-      <SiteHeader />
+      <SiteHeader /><FormJump target="sugerir-obra" label="Sugerir uma obra ↓" />
       <div className="content">
         <section className="catalog-hero">
           <div><span className="section-kicker">CATÁLOGO COONTO</span><h1>Grandes obras.<br/>Novas portas.</h1></div>

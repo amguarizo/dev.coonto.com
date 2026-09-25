@@ -1,21 +1,24 @@
 import "./styles.css";
 import { requireUser } from "@/lib/auth";
+import { requireCrmHost } from "@/lib/admin-host";
 import { query } from "@/lib/db";
 import { SiteHeader } from "@/components/site-header";
-import { addMember, assignLicense, createClassroom, createOrganization, enrollStudent, revokeLicense, setSeats, updateLead } from "./actions";
+import { addMember, assignLicense, assignTeacher, createClassroom, createOrganization, enrollStudent, removeFromClassroom, revokeLicense, setSeats, updateLead } from "./actions";
 
 export const dynamic = "force-dynamic";
 
 type Organization = { id: string; name: string; kind: string; seats: number | null; used: string };
 type Member = { organization_id: string; user_id: string; role: string; name: string; email: string; licensed: boolean };
 type Classroom = { id: string; organization_id: string; name: string; student_count: string };
+type ClassroomMember = { organization_id: string; classroom_id: string; user_id: string; name: string };
 type Lead = { id: string; name: string; email: string; role: string; organization: string | null; message: string; status: string; created_at: Date };
 type Student = { id: string; name: string; email: string; last_seen_at: Date; progress: string; school_count: string };
 
 export default async function CRM({ searchParams }: { searchParams: Promise<{ salvo?: string }> }) {
+  await requireCrmHost();
   const user = await requireUser("/backoffice/crm");
   if (user.role !== "admin") return <main className="page"><SiteHeader/><div className="content page-hero"><h1>Área restrita</h1></div></main>;
-  const [organizations, memberships, classrooms, leads, students] = await Promise.all([
+  const [organizations, memberships, classrooms, leads, students, classroomTeachers, classroomStudents] = await Promise.all([
     query<Organization>(`SELECT o.id,o.name,o.kind,p.seats,
       (SELECT COUNT(*)::text FROM license_assignments a WHERE a.organization_id=o.id AND a.work_slug='o-alienista' AND a.status='active') AS used
       FROM organizations o LEFT JOIN license_pools p ON p.organization_id=o.id AND p.work_slug='o-alienista' ORDER BY o.name`),
@@ -29,6 +32,8 @@ export default async function CRM({ searchParams }: { searchParams: Promise<{ sa
       (SELECT COUNT(*)::text FROM learning_progress p WHERE p.user_id=u.id) AS progress,
       (SELECT COUNT(*)::text FROM organization_memberships m WHERE m.user_id=u.id AND m.role='student') AS school_count
       FROM users u ORDER BY u.last_seen_at DESC LIMIT 100`),
+    query<ClassroomMember>("SELECT t.organization_id,t.classroom_id,t.user_id,u.name FROM classroom_teachers t JOIN users u ON u.id=t.user_id ORDER BY u.name"),
+    query<ClassroomMember>("SELECT e.organization_id,e.classroom_id,e.user_id,u.name FROM classroom_enrollments e JOIN users u ON u.id=e.user_id ORDER BY u.name"),
   ]);
   const saved = (await searchParams).salvo === "1";
   return <main className="backoffice"><SiteHeader/><div className="content crm-page">
@@ -44,12 +49,13 @@ export default async function CRM({ searchParams }: { searchParams: Promise<{ sa
       const members = memberships.rows.filter(m => m.organization_id === org.id);
       const classes = classrooms.rows.filter(c => c.organization_id === org.id);
       const studentsInOrg = members.filter(m => m.role === "student");
+      const teachersInOrg = members.filter(m => m.role === "teacher");
       return <section className="dashboard-card" key={org.id}><h2>{org.name}</h2><p>{org.kind} · {members.length} pessoa(s) · O Alienista: {org.used}/{org.seats ?? 0} vaga(s) em uso</p>
         <div className="crm-form-grid"><form action={addMember} className="form-card"><h3>Vincular pessoa</h3><input type="hidden" name="organization_id" value={org.id}/><label className="field">E-mail da conta<input name="email" type="email" required/></label><label className="field">Função<select name="role"><option value="student">Aluno</option><option value="teacher">Professor</option><option value="manager">Gestor</option></select></label><button className="button button-primary">Vincular</button></form>
           <form action={createClassroom} className="form-card"><h3>Nova turma</h3><input type="hidden" name="organization_id" value={org.id}/><label className="field">Nome da turma<input name="name" required/></label><button className="button button-primary">Criar turma</button></form>
           <form action={setSeats} className="form-card"><h3>Licenças de O Alienista</h3><input type="hidden" name="organization_id" value={org.id}/><label className="field">Vagas contratadas ou de piloto<input name="seats" type="number" min={org.used} max="100000" defaultValue={org.seats ?? 0} required/></label><button className="button button-primary">Salvar vagas</button></form></div>
         <h3>Pessoas vinculadas</h3>{members.length ? <div className="status-list">{members.map(member => <div className="status-item" key={member.user_id}><div><strong>{member.name}</strong> · {member.role}<br/><small>{member.email}</small></div>{member.role === "student" && <form action={member.licensed ? revokeLicense : assignLicense}><input type="hidden" name="organization_id" value={org.id}/><input type="hidden" name="user_id" value={member.user_id}/><button className="button button-primary">{member.licensed ? "Revogar licença" : "Atribuir licença"}</button></form>}</div>)}</div> : <p>Nenhuma pessoa vinculada.</p>}
-        <h3>Turmas</h3>{classes.length ? classes.map(classroom => <div className="status-item" key={classroom.id}><div><strong>{classroom.name}</strong> · {classroom.student_count} aluno(s)</div><form action={enrollStudent} className="crm-inline-form"><input type="hidden" name="organization_id" value={org.id}/><input type="hidden" name="classroom_id" value={classroom.id}/><label className="field">Adicionar aluno<select name="user_id" required defaultValue=""><option value="" disabled>Selecione</option>{studentsInOrg.map(student => <option key={student.user_id} value={student.user_id}>{student.name} · {student.email}</option>)}</select></label><button className="button button-primary" disabled={!studentsInOrg.length}>Adicionar</button></form></div>) : <p>Nenhuma turma criada.</p>}
+        <h3>Turmas</h3>{classes.length ? classes.map(classroom => <div className="status-item" key={classroom.id}><div><strong>{classroom.name}</strong> · {classroom.student_count} aluno(s)<div className="crm-class-members"><strong>Professores</strong>{classroomTeachers.rows.filter(t => t.classroom_id === classroom.id).map(person => <form action={removeFromClassroom} key={person.user_id}><input type="hidden" name="organization_id" value={org.id}/><input type="hidden" name="classroom_id" value={classroom.id}/><input type="hidden" name="user_id" value={person.user_id}/><input type="hidden" name="role" value="teacher"/>{person.name} <button type="submit">Remover</button></form>)}</div><div className="crm-class-members"><strong>Alunos</strong>{classroomStudents.rows.filter(t => t.classroom_id === classroom.id).map(person => <form action={removeFromClassroom} key={person.user_id}><input type="hidden" name="organization_id" value={org.id}/><input type="hidden" name="classroom_id" value={classroom.id}/><input type="hidden" name="user_id" value={person.user_id}/><input type="hidden" name="role" value="student"/>{person.name} <button type="submit">Remover</button></form>)}</div></div><div><form action={enrollStudent} className="crm-inline-form"><input type="hidden" name="organization_id" value={org.id}/><input type="hidden" name="classroom_id" value={classroom.id}/><label className="field">Adicionar aluno<select name="user_id" required defaultValue=""><option value="" disabled>Selecione</option>{studentsInOrg.map(student => <option key={student.user_id} value={student.user_id}>{student.name} · {student.email}</option>)}</select></label><button className="button button-primary" disabled={!studentsInOrg.length}>Adicionar</button></form><form action={assignTeacher} className="crm-inline-form"><input type="hidden" name="organization_id" value={org.id}/><input type="hidden" name="classroom_id" value={classroom.id}/><label className="field">Vincular professor<select name="user_id" required defaultValue=""><option value="" disabled>Selecione</option>{teachersInOrg.map(teacher => <option key={teacher.user_id} value={teacher.user_id}>{teacher.name} · {teacher.email}</option>)}</select></label><button className="button button-primary" disabled={!teachersInOrg.length}>Vincular</button></form></div></div>) : <p>Nenhuma turma criada.</p>}
       </section>;
     })}
   </div></main>;

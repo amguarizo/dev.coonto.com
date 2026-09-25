@@ -8,4 +8,11 @@
 .crm-table-wrap { overflow-x:auto; }
 .crm-table { width:100%; border-collapse:collapse; text-align:left; }
 .crm-table th,.crm-table td { padding:12px; border-bottom:1px solid var(--line); }
+.crm-summary { display:flex; flex-wrap:wrap; gap:12px; }
+.crm-summary span { padding:12px 15px; border-radius:12px; background:#f3f5fa; }
+.crm-class-members { display:grid; gap:5px; margin-top:8px; font-size:.9rem; }
+.crm-class-members form { display:flex; justify-content:space-between; gap:12px; }
+.crm-class-members button { border:0; background:transparent; color:#2454ff; cursor:pointer; text-decoration:underline; }
+.admin-site-header nav { white-space:nowrap; }
+@media (max-width:900px) { .admin-site-header { overflow-x:auto; gap:18px; }.admin-site-header nav { min-width:max-content; }.admin-site-header nav>a { display:inline-flex; }.admin-site-header nav span { display:none; }.admin-site-header .brand-logo { width:100px; } }
 @media (max-width:850px) { .crm-form-grid { grid-template-columns:1fr; } .crm-page .status-item { align-items:start; flex-direction:column; } }

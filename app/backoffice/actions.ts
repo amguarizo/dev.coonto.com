@@ -3,9 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth";
+import { requireCrmHost } from "@/lib/admin-host";
 import { query } from "@/lib/db";
 
 export async function saveCommercialSettings(form: FormData) {
+  await requireCrmHost();
   const user = await requireUser("/backoffice");
   if (user.role !== "admin") throw new Error("Acesso negado");
   const single = Number(form.get("single_price"));
