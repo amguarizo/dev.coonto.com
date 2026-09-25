@@ -1,6 +1,14 @@
 "use client";
 
-import { ArrowRight, Building2, GraduationCap, MessageCircle, Sparkles } from "lucide-react";
+import { ArrowDown, ArrowRight, BookOpenCheck, Brain, Building2, Compass, GraduationCap, Lightbulb, MessageCircle, ScanEye, Sparkles } from "lucide-react";
+
+const methodSteps = [
+  { label: "Situação", description: "Uma tensão da obra", icon: ScanEye },
+  { label: "Decisão", description: "Sua hipótese", icon: Lightbulb },
+  { label: "Descoberta", description: "Consequências e pistas", icon: Compass },
+  { label: "Evidência", description: "De volta ao livro", icon: BookOpenCheck },
+  { label: "Memória", description: "O que ficou com você", icon: Brain },
+];
 
 const audienceCards = [
   {
@@ -35,8 +43,38 @@ export default function Home() {
           <a href="/login?return_to=%2Fminha-biblioteca">Entrar</a>
         </nav>
       </header>
-      <section className="split-hero" aria-labelledby="main-question">
-        <h1 id="main-question" className="home-message">Viva a obra para compreendê-la.<small>Entre na história, decida e volte ao texto com novas perguntas.</small></h1>
+      <section className="method-intro" aria-labelledby="method-title">
+        <div className="method-intro-heading">
+          <span className="method-kicker">LEITURA QUE VIRA DESCOBERTA</span>
+          <h1 id="method-title">Entre na história.<br /><em>Volte ao livro.</em></h1>
+          <p>No Coonto, uma cena vira uma pergunta. Você toma uma posição, descobre pistas e procura respostas no texto original.</p>
+          <a className="method-down" href="#escolha-seu-caminho">Entendi. Quero começar <ArrowDown size={18} aria-hidden="true" /></a>
+        </div>
+        <div className="method-visual" aria-label="O ciclo de leitura do Coonto, do encontro com a cena à memória">
+          <div className="method-book" aria-hidden="true"><span>UMA OBRA</span><strong>O<br />Alienista</strong><small>MACHADO DE ASSIS</small></div>
+          <div className="method-steps">
+            {methodSteps.map((step, index) => {
+              const Icon = step.icon;
+              return <div className="method-step" key={step.label}>
+                <span className="method-step-number">0{index + 1}</span>
+                <span className="method-step-icon"><Icon size={23} strokeWidth={1.9} aria-hidden="true" /></span>
+                <span className="method-step-copy"><strong>{step.label}</strong><small>{step.description}</small></span>
+              </div>;
+            })}
+          </div>
+        </div>
+        <div className="method-example">
+          <div className="method-example-label"><span className="method-example-dot" />UM EXEMPLO NA PRÁTICA</div>
+          <p><strong>Em O Alienista:</strong> quem ganha autoridade quando as personagens mudam de lado?</p>
+          <span>Sua interpretação é o começo. As passagens da obra ajudam você a sustentá-la ou revê-la.</span>
+          <a href="/obra/o-alienista">Conheça a experiência <ArrowRight size={18} aria-hidden="true" /></a>
+        </div>
+      </section>
+      <section className="home-choose" id="escolha-seu-caminho" aria-labelledby="choose-title">
+        <span className="method-kicker">SEU PRÓXIMO PASSO</span>
+        <h2 id="choose-title">Como você quer começar?</h2>
+      </section>
+      <section className="split-hero compact-hero" aria-label="Escolha seu caminho no Coonto">
         {audienceCards.map((item) => {
           const Icon = item.icon;
           return (
