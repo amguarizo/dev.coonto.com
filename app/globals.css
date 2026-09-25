@@ -226,6 +226,36 @@ button,input,textarea,select { font:inherit; }
 @media (max-width:900px) { .catalog-pipeline ol { grid-template-columns:repeat(3,minmax(0,1fr)); }.educator-detail-hero,.partners-feature,.checkout-page { grid-template-columns:1fr; }.educator-detail-image { height:280px; }.educator-detail-steps { grid-template-columns:1fr; }.partners-visual { height:260px; } }
 @media (max-width:620px) { .home-message { top:88px; font-size:1.715rem; width:92%; }.home-message small { font-size:.88rem; }.catalog-pipeline ol { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }.catalog-pipeline li { min-height:210px; }.catalog-pipeline li>span:last-child { padding:12px; font-size:.91rem; }.checkout-page { padding-top:50px; }.educator-detail-hero { padding-top:50px; } }
 .book-card .catalog-card-art { z-index:0; }.book-card::before { z-index:1; }
+/* Pesquisa de direcionamento V1.6 */
+.survey-page { max-width:920px; padding-top:64px; padding-bottom:100px; }
+.survey-intro h1 { margin:12px 0 22px; font-size:clamp(2.5rem,5vw,4.5rem); line-height:1; letter-spacing:-.05em; }
+.survey-intro p { max-width:760px; color:var(--muted); font-size:1.08rem; line-height:1.6; }
+.survey-intro a { color:var(--blue); font-weight:800; text-decoration:underline; }
+.survey-form { margin-top:44px; display:grid; gap:24px; }
+.survey-form>section { background:white; border:1px solid var(--line); border-radius:25px; padding:clamp(22px,4vw,42px); }
+.survey-form h2 { margin:0 0 25px; font-size:1.65rem; letter-spacing:-.035em; }
+.survey-question { border:0; padding:0; margin:0 0 34px; min-width:0; }
+.survey-question:last-child { margin-bottom:0; }
+.survey-question legend { display:flex; align-items:flex-start; gap:12px; padding:0; margin-bottom:15px; font-size:1.13rem; line-height:1.4; font-weight:850; }
+.survey-question legend>span { flex:none; min-width:31px; height:31px; display:grid; place-items:center; border-radius:10px; background:#e7eeff; color:var(--blue); font-size:.77rem; }
+.survey-hint { color:var(--muted); margin:-8px 0 13px; font-size:.86rem; }
+.survey-options { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+.survey-option { display:flex; align-items:flex-start; gap:11px; min-height:52px; padding:13px; border:1px solid var(--line); border-radius:14px; line-height:1.35; cursor:pointer; }
+.survey-option:has(input:checked) { background:#eef2ff; border-color:var(--blue); }
+.survey-option input { flex:none; margin:3px 0 0; width:17px; height:17px; accent-color:var(--blue); }
+.survey-other,.survey-text { display:grid; gap:8px; margin:16px 0 30px; font-weight:750; line-height:1.4; }
+.survey-other { font-size:.9rem; }
+.survey-text input,.survey-other input,.survey-text textarea { width:100%; border:1px solid #bdc8dc; border-radius:13px; padding:12px 14px; background:white; color:var(--ink); font-weight:400; }
+.survey-text textarea { resize:vertical; min-height:82px; }
+.survey-privacy { color:var(--muted); font-size:.87rem; line-height:1.5; }
+.survey-submit { width:fit-content; min-height:55px; padding-inline:28px; }.survey-submit:disabled { opacity:.65; cursor:wait; }
+.survey-success { margin:45px 0 90px; background:#e7f8ef; border-radius:24px; padding:40px; }.survey-success h2 { margin-top:0; }.survey-success .button { margin-top:12px; }
+.survey-results { padding-bottom:90px; }.survey-back { display:inline-block; margin-top:35px; color:var(--blue); font-weight:800; }
+.survey-summary-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }.survey-summary-grid h2 { margin:0 0 18px; }
+.survey-summary-grid ul { list-style:none; margin:0; padding:0; }.survey-summary-grid li { display:flex; justify-content:space-between; gap:18px; padding:10px 0; border-top:1px solid var(--line); }.survey-summary-grid li strong { color:var(--blue); }
+.survey-response-list { margin-top:55px; }.survey-response-list h2 { font-size:2rem; }.survey-response { border:1px solid var(--line); background:white; border-radius:16px; margin:10px 0; padding:18px 22px; }.survey-response summary { cursor:pointer; display:flex; flex-wrap:wrap; gap:10px 24px; justify-content:space-between; }.survey-response summary span { color:var(--muted); }.survey-response dl { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:15px 24px; margin-top:25px; }.survey-response dt { color:var(--muted); font-size:.8rem; font-weight:800; }.survey-response dd { margin:4px 0 0; white-space:pre-wrap; overflow-wrap:anywhere; }.survey-pagination { display:flex; gap:24px; margin-top:25px; font-weight:800; }.survey-pagination a { color:var(--blue); }
+@media (max-width:900px) { .site-header nav>.survey-nav-link { display:inline-flex; }.home-header nav>.home-nav-secondary { display:none; } }
+@media (max-width:620px) { .survey-page { padding-top:42px; }.survey-options,.survey-summary-grid,.survey-response dl { grid-template-columns:1fr; }.survey-option { min-height:48px; }.survey-form>section { padding:20px; }.survey-question legend { font-size:1.03rem; }.site-header nav>.survey-nav-link { font-size:.82rem; }.home-header nav>.survey-nav-link { font-weight:900; } }
 /* V1.5: o método vem antes da escolha do percurso. */
 .method-intro { position:relative; overflow:hidden; min-height:760px; padding:158px clamp(24px,6vw,100px) 58px; color:white; background:radial-gradient(circle at 78% 30%,rgba(67,78,201,.32),transparent 36%),radial-gradient(circle at 5% 72%,rgba(10,184,204,.12),transparent 30%),#09162f; display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); column-gap:clamp(35px,6vw,120px); align-items:center; }
 .method-intro-heading { position:relative; z-index:2; align-self:center; padding-bottom:20px; }
